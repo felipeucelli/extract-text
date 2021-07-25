@@ -1,27 +1,31 @@
 import tkinter
 from tkinter import filedialog
+import easyocr
+import _thread
+import fitz
+
+
+def thread_pdf(*args):
+    with fitz.open(args[0]) as pdf:
+        text = ''
+        for page in pdf:
+            text += page.getText()
+    print(text)
 
 
 def extract_pdf(pdf_file):
-    import fitz
+    _thread.start_new_thread(thread_pdf, (pdf_file, 0))
 
-    with fitz.open(pdf_file) as pdf:
-        texto = ''
-        for pagina in pdf:
-            texto += pagina.getText()
 
-    print(texto)
+def thread_extract(*args):
+    reader = easyocr.Reader(['pt'])
+    result_file = reader.readtext(args[0], paragraph=False)
+    for result in result_file:
+        print(f'{result[1]}')
 
 
 def extract_image(image_file):
-    import easyocr
-
-    reader = easyocr.Reader(['pt'])
-
-    resultados = reader.readtext(image_file, paragraph=False)
-
-    for resultado in resultados:
-        print(f'{resultado[1]}')
+    _thread.start_new_thread(thread_extract, (image_file, 0))
 
 
 def extract():
@@ -46,6 +50,7 @@ def get_file_path():
 
 
 root = tkinter.Tk()
+root.title('Extract Text')
 file_path = ''
 
 canvas = tkinter.Canvas(root, width=300, height=250)
