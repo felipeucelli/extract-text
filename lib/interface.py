@@ -28,7 +28,8 @@ class Interface:
     def _get_file_path(self):
         self.file_path = filedialog.askopenfilename(filetypes=(('PDF files', '*.pdf'),
                                                                ('Image files', '*.jpg *.png')))
-        self.label['text'] = 'File: ' + self.file_path.split('/')[len(self.file_path.split('/')) - 1]
+        if self.file_path != '':
+            self.label['text'] = 'File: ' + self.file_path.split('/')[len(self.file_path.split('/')) - 1]
 
     def _save_file(self, extracted_file):
         file_name = self.file_path.split('/')[len(self.file_path.split('/')) - 1]
