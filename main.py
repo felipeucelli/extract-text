@@ -19,16 +19,17 @@ def enable_btn():
 
 def save_file(extracted_file):
     global file_path
-    file_path = file_path.split('/')[len(file_path.split('/')) - 1]
-    new_file_name = file_path.split('.')[0]
-    file_name = filedialog.asksaveasfilename(defaultextension='txt',
-                                             initialfile=new_file_name,
-                                             filetypes=(('Text files', '*.txt'), ('All files', '*.*')))
+    file_name = file_path.split('/')[len(file_path.split('/')) - 1]
+    new_file_name = file_name.split('.')[0]
+    save_file_path = filedialog.asksaveasfilename(defaultextension='txt',
+                                                  initialfile=new_file_name,
+                                                  filetypes=(('Text files', '*.txt'), ('All files', '*.*')))
 
-    print(file_name)
-
-    with open(file_name, 'w') as save:
-        save.writelines(extracted_file)
+    if save_file_path != '':
+        with open(save_file_path, 'w') as save:
+            save.writelines(extracted_file)
+    else:
+        pass
 
 
 def thread_pdf(*args):
@@ -37,7 +38,6 @@ def thread_pdf(*args):
         text = ''
         for page in pdf:
             text += page.getText()
-    print(text)
     save_file(text)
     enable_btn()
 
@@ -48,11 +48,10 @@ def extract_pdf(pdf_file):
 
 def thread_image(*args):
     disable_btn()
-    reader = easyocr.Reader(['pt'])
+    reader = easyocr.Reader(['pt'], verbose=False)
     result_file = reader.readtext(args[0], paragraph=False)
     text = ''
     for result in result_file:
-        print(f'{result[1]}')
         text += f'{result[1]}\n'
     save_file(text)
     enable_btn()
@@ -66,31 +65,30 @@ def extract():
     global file_path
     if file_path != '':
         file = file_path.split('/')[len(file_path.split('/')) - 1]
-
         if file.split('.')[1] == 'pdf':
             extract_pdf(file_path)
-        if file.split('.')[1] == 'jpg':
+        if file.split('.')[1] == 'jpg' or file.split('.')[1] == 'png':
             extract_image(file_path)
 
 
 def get_file_path():
     global file_path
     global label
-    file_path = filedialog.askopenfilename(filetypes=(('Pdf files', '*.pdf'),
-                                                      ('Image files', '*.jpg'),
-                                                      ('All files', '*.*')))
+    file_path = filedialog.askopenfilename(filetypes=(('PDF files', '*.pdf'),
+                                                      ('Image files', '*.jpg *.png')))
 
     label['text'] = 'File: ' + file_path.split('/')[len(file_path.split('/')) - 1]
 
 
 root = tkinter.Tk()
 root.title('Extract Text')
+root.resizable(width=False, height=False)
 file_path = ''
 
 canvas = tkinter.Canvas(root, width=300, height=250)
 canvas.pack()
 
-label = tkinter.Label(root, font='Arial 20')
+label = tkinter.Label(root, font='Arial 15')
 canvas.create_window(150, 60, window=label)
 
 get_file = tkinter.Button(text='    Import File    ', font='Arial 15', command=get_file_path)
