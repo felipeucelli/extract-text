@@ -15,8 +15,11 @@ class Interface:
         self.canvas = tkinter.Canvas(self.root, width=300, height=250)
         self.canvas.pack()
 
-        self.label = tkinter.Label(self.root, font='Arial 15')
-        self.canvas.create_window(150, 60, window=self.label)
+        self.label_file = tkinter.Label(self.root, font='Arial 15')
+        self.canvas.create_window(150, 60, window=self.label_file)
+
+        self.label_status = tkinter.Label(self.root, font='Arial 15', fg='green')
+        self.canvas.create_window(150, 230, window=self.label_status)
 
         self.get_file = tkinter.Button(text='    Import File    ', font='Arial 15', command=self._get_file_path)
         self.canvas.create_window(150, 130, window=self.get_file)
@@ -29,7 +32,7 @@ class Interface:
         self.file_path = filedialog.askopenfilename(filetypes=(('PDF files', '*.pdf'),
                                                                ('Image files', '*.jpg *.png')))
         if self.file_path != '':
-            self.label['text'] = 'File: ' + self.file_path.split('/')[len(self.file_path.split('/')) - 1]
+            self.label_file['text'] = 'File: ' + self.file_path.split('/')[len(self.file_path.split('/')) - 1]
 
     def _save_file(self, extracted_file):
         file_name = self.file_path.split('/')[len(self.file_path.split('/')) - 1]
@@ -45,10 +48,12 @@ class Interface:
     def _disable_btn(self):
         self.get_file.configure(state=tkinter.DISABLED)
         self.extract_file.configure(state=tkinter.DISABLED)
+        self.label_status['text'] = 'Extracting, please wait.'
 
     def _enable_btn(self):
         self.get_file.configure(state=tkinter.ACTIVE)
         self.extract_file.configure(state=tkinter.ACTIVE)
+        self.label_status['text'] = ''
 
     def _thread_pdf(self, *args):
         self._disable_btn()
