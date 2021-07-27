@@ -37,6 +37,8 @@ class Interface:
                                            command=self._extract)
         self.canvas.create_window(150, 180, window=self.extract_file)
 
+        self.extract_file.configure(state=tkinter.DISABLED)
+
     def _get_file_path(self):
         """
         Get the directory of the file to be extracted
@@ -46,6 +48,10 @@ class Interface:
                                                                ('Image Files', '*.jpg *.jpeg *.png')))
         if self.file_path != '':
             self.label_file['text'] = 'File: ' + self.file_path.split('/')[len(self.file_path.split('/')) - 1]
+            self.extract_file.configure(state=tkinter.ACTIVE)
+        else:
+            self.label_file['text'] = ''
+            self.extract_file.configure(state=tkinter.DISABLED)
 
     def _save_file(self, extracted_file):
         """
@@ -92,6 +98,7 @@ class Interface:
             text = ''
             for page in pdf:
                 text += page.getText()
+        self.label_status['text'] = 'Extraction Finished.'
         self._save_file(text)
         self._enable_btn()
 
@@ -107,6 +114,7 @@ class Interface:
         text = ''
         for result in result_file:
             text += f'{result[1]}\n'
+        self.label_status['text'] = 'Extraction Finished.'
         self._save_file(text)
         self._enable_btn()
 
