@@ -141,9 +141,10 @@ class Interface:
         """
         if self.file_path != '':
             file = self.file_path.split('/')[len(self.file_path.split('/')) - 1]
-            if file.split('.')[1] == 'pdf':
+            file_extension = file.split('.')[len(file.split('.')) - 1]
+            if file_extension == 'pdf':
                 self._extract_pdf(self.file_path)
-            if file.split('.')[1] == 'jpg' or file.split('.')[1] == 'jpeg' or file.split('.')[1] == 'png':
+            if file_extension == 'jpg' or file_extension == 'jpeg' or file_extension == 'png':
                 self._extract_image(self.file_path)
 
     def start(self):
