@@ -60,7 +60,8 @@ class Interface:
         :return:
         """
         file_name = self.file_path.split('/')[len(self.file_path.split('/')) - 1]
-        new_file_name = file_name.split('.')[0]
+        file_extension = file_name.split('.')[len(file_name.split('.')) - 1]
+        new_file_name = file_name.replace(f'.{file_extension}', '')
         save_file_path = filedialog.asksaveasfilename(defaultextension='txt',
                                                       initialfile=new_file_name,
                                                       filetypes=(('Text files', '*.txt'), ('All files', '*.*')))
