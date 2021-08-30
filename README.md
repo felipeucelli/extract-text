@@ -3,6 +3,9 @@
 ## Running the application
 `python3 main.py`
 
+## Installing requirements
+`pip3 install -r requirements.txt`
+
 ## Prerequisites
 * [Python3](https://www.python.org)
 * [Easyocr](https://www.pyimagesearch.com/2020/09/14/getting-started-with-easyocr-for-optical-character-recognition/)
